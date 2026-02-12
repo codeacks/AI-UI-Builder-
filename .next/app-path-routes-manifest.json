@@ -1,7 +1,0 @@
-{
-  "/api/agent/replay/route": "/api/agent/replay",
-  "/_not-found/page": "/_not-found",
-  "/api/agent/route": "/api/agent",
-  "/api/versions/route": "/api/versions",
-  "/page": "/"
-}

@@ -59,6 +59,14 @@ const MODE_CONFIG: Record<
   },
 };
 
+const CAPABILITIES = [
+  "Initial UI generation from natural language",
+  "Iterative modification via chat",
+  "Live preview updating",
+  "Explanation output from the AI",
+  "Rollback or version change",
+];
+
 export default function HomePage() {
   const [theme, setTheme] = useState<ThemeMode>("dark");
   const [mode, setMode] = useState<ActionMode>("generate");
@@ -244,6 +252,15 @@ export default function HomePage() {
     await loadVersions();
   }
 
+  function switchVersion(id: string) {
+    const selected = versions.find((v) => v.id === id);
+    if (!selected) return;
+    setActiveVersionId(selected.id);
+    setCode(selected.code);
+    setExplanation(selected.explanation);
+    setChat((prev) => [...prev, { role: "assistant", text: `Switched to version ${selected.id}` }]);
+  }
+
   async function replayGeneration(sourceVersionId: string) {
     if (isStreaming) return;
     setIsStreaming(true);
@@ -286,6 +303,15 @@ export default function HomePage() {
             <ModeButton active={mode === "generate"} onClick={() => handleModeChange("generate")} label="Generate" />
             <ModeButton active={mode === "modify"} onClick={() => handleModeChange("modify")} label="Modify" />
             <ModeButton active={mode === "regenerate"} onClick={() => handleModeChange("regenerate")} label="Regenerate" />
+          </div>
+
+          <div className="surface-box mb-3 text-xs">
+            <div className="font-semibold">Capabilities</div>
+            <ul className="mt-1 space-y-1">
+              {CAPABILITIES.map((feature) => (
+                <li key={feature}>[x] {feature}</li>
+              ))}
+            </ul>
           </div>
 
           <textarea
@@ -392,9 +418,7 @@ export default function HomePage() {
                 <button
                   className="w-full text-left"
                   onClick={() => {
-                    setActiveVersionId(v.id);
-                    setCode(v.code);
-                    setExplanation(v.explanation);
+                    switchVersion(v.id);
                   }}
                 >
                   <div className="text-xs font-semibold">{v.id}</div>
@@ -404,6 +428,9 @@ export default function HomePage() {
                   </div>
                 </button>
                 <div className="mt-2 flex gap-2">
+                  <button className="btn-ghost text-xs" onClick={() => switchVersion(v.id)}>
+                    Switch Version
+                  </button>
                   <button className="btn-ghost text-xs" onClick={() => rollback(v.id)}>
                     Rollback
                   </button>
