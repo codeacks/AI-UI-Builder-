@@ -1,0 +1,7 @@
+{
+  "/api/agent/replay/route": "app/api/agent/replay/route.js",
+  "/_not-found/page": "app/_not-found/page.js",
+  "/api/agent/route": "app/api/agent/route.js",
+  "/api/versions/route": "app/api/versions/route.js",
+  "/page": "app/page.js"
+}
